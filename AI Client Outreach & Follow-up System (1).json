@@ -1,0 +1,816 @@
+{
+  "name": "AI Client Outreach & Follow-up System",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w",
+          "mode": "list",
+          "cachedResultName": "Prospect List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Sent",
+            "Date Sent": "={{ $now.toFormat('yyyy-MM-dd') }}",
+            "Time Sent": "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}",
+            "Conpany": "={{ $('Process Each Prospect').item.json.Conpany }}",
+            "Contact": "={{ $('Process Each Prospect').item.json.Contact }}",
+            "Email": "={{ $('Process Each Prospect').item.json.Email }}",
+            "Industry": "={{ $('Process Each Prospect').item.json.Industry }}",
+            "Website": "={{ $('Process Each Prospect').item.json.Website }}",
+            "Thread ID": "={{ $json.threadId }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Conpany",
+              "displayName": "Conpany",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Industry",
+              "displayName": "Industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date Sent",
+              "displayName": "Date Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time Sent",
+              "displayName": "Time Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Thread ID",
+              "displayName": "Thread ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        928,
+        352
+      ],
+      "id": "ba0ad740-bc50-4039-9a04-7147c4e47760",
+      "name": "Update Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "W2etVopVizVki4sh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Process Each Prospect').item.json.Email }}",
+        "subject": "=AI Automation Idea for {{ $('Process Each Prospect').item.json.Conpany }}",
+        "emailType": "text",
+        "message": "={{ $json.output[0].content[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        352
+      ],
+      "id": "84e54fff-7ec3-4a56-892c-b5c0b79e30f6",
+      "name": "Send Outreach Email",
+      "webhookId": "a7b0811a-1b8f-4831-9ac8-5f166ce46bfd",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7RwABpVWXQbEx0xI",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an expert B2B sales copywriter specializing in AI automation services.\n\nYour job is to write highly personalized cold emails for business decision-makers.\n\nRules:\n\n- Never sound robotic or overly salesy.\n- Keep emails between 100 and 150 words.\n- Mention the company name naturally.\n- Focus on solving business problems rather than selling AI.\n- Explain one or two measurable benefits, such as reducing manual work, improving response times, or increasing operational efficiency.\n- End with a simple, low-pressure call to action asking for a short 10–15 minute conversation.\n- Do not exaggerate or make guarantees.\n- Avoid buzzwords like \"revolutionary,\" \"game-changing,\" or \"cutting-edge.\"\n- Write in a friendly, professional tone.\n- Return only the email body. Do not include a subject line unless explicitly requested."
+            },
+            {
+              "content": "=Write a personalized cold outreach email using the information below.\n\nCompany Name:\n{{ $json.Conpany }}\n\nIndustry:\n{{ $json.Industry }}\n\nWebsite:\n{{ $json.Website }}\n\nContact Name:\n{{ $json.Contact }}\n\nMy Name:\nAbel Lucky Chigozie\n\nMy Service:\nI build AI automation systems using n8n, OpenAI, Google Workspace, Microsoft Teams, Slack, CRMs, and APIs. I help businesses automate repetitive tasks, qualify leads, improve customer response times, and reduce manual work.\n\nInstructions:\n- If the contact name is available, greet them by name. Otherwise use \"Hi there,\".\n- Mention the company name naturally.\n- Reference a common operational challenge for businesses in this industry without pretending you have insider knowledge about the company.\n- Explain how AI automation could help address that challenge.\n- Invite them to a free 10–15 minute demo to discuss ideas relevant to their business.\n- End politely with my name Abel Lucky Chigozie."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        368,
+        352
+      ],
+      "id": "edaac4d5-5737-4ce8-b13d-60e877c81a97",
+      "name": "Write Personalized Email",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1136,
+        352
+      ],
+      "id": "36170afb-9dac-4e04-a235-f672b49136df",
+      "name": "Wait 3 Days",
+      "webhookId": "4bd5a419-520f-474e-beb3-d183266aa2c7"
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "get",
+        "threadId": "={{ $json['Thread ID'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1344,
+        352
+      ],
+      "id": "06488cd9-0e8e-4b13-a0a9-0d11f364d41d",
+      "name": "Check for Reply",
+      "webhookId": "2a04eec8-db29-4fba-a671-ffd2d0ce87e7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7RwABpVWXQbEx0xI",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2f67f151-1d04-40c2-b198-3d2fddde8256",
+              "leftValue": "={{ $json.messages.length }}",
+              "rightValue": 2,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1552,
+        352
+      ],
+      "id": "e7ef7aff-00f6-40e0-b144-b44b4815b7c6",
+      "name": "Has Prospect Replied?"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w",
+          "mode": "list",
+          "cachedResultName": "Prospect List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $('Get New Prospects').item.json.Email }}",
+            "Conpany": "={{ $('Get New Prospects').item.json.Conpany }}",
+            "Contact": "={{ $('Get New Prospects').item.json.Contact }}",
+            "Industry": "={{ $('Get New Prospects').item.json.Industry }}",
+            "Website": "={{ $('Get New Prospects').item.json.Website }}",
+            "Status": "Replied",
+            "Date Sent": "={{ $('Update Status').item.json['Date Sent'] }}",
+            "Time Sent": "={{ $('Update Status').item.json['Time Sent'] }}",
+            "Thread ID": "={{ $('Update Status').item.json['Thread ID'] }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Conpany",
+              "displayName": "Conpany",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Industry",
+              "displayName": "Industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Sent",
+              "displayName": "Date Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time Sent",
+              "displayName": "Time Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Thread ID",
+              "displayName": "Thread ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1744,
+        32
+      ],
+      "id": "b0b381ab-a474-45dc-9b29-48825eb26b42",
+      "name": "Mark as Replied",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oQBS3dPqHmSmo10M",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Update Status').item.json.Email }}",
+        "subject": "Following up",
+        "emailType": "text",
+        "message": "=Hi {{ $('Update Status').item.json.Contact }},  I wanted to follow up on my previous email about using AI automation to streamline your sales and customer inquiry process.  If you're interested, I'd be happy to show you a short demo tailored to your business.  Best, Abel Lucky Chigozie",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        448
+      ],
+      "id": "4324d2ab-9889-4149-a3b0-b4192c4c71d2",
+      "name": "Send Follow-up",
+      "webhookId": "16432303-278d-4101-8e33-a8edc16bb193",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7RwABpVWXQbEx0xI",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w",
+          "mode": "list",
+          "cachedResultName": "Prospect List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $('Wait 3 Days').item.json.Email }}",
+            "Conpany": "={{ $('Wait 3 Days').item.json.Conpany }}",
+            "Contact": "={{ $('Wait 3 Days').item.json.Contact }}",
+            "Industry": "={{ $('Wait 3 Days').item.json.Industry }}",
+            "Website": "={{ $('Wait 3 Days').item.json.Website }}",
+            "Status": "Follow-up Sent",
+            "Date Sent": "={{ $('Wait 3 Days').item.json['Date Sent'] }}",
+            "Time Sent": "={{ $('Wait 3 Days').item.json['Time Sent'] }}",
+            "Thread ID": "={{ $('Wait 3 Days').item.json['Thread ID'] }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Conpany",
+              "displayName": "Conpany",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Industry",
+              "displayName": "Industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Sent",
+              "displayName": "Date Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time Sent",
+              "displayName": "Time Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Thread ID",
+              "displayName": "Thread ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1968,
+        448
+      ],
+      "id": "ad28d9ac-ed57-4b33-8b6e-a43229c0fc3a",
+      "name": "Mark Follow-up Sent",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "W2etVopVizVki4sh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 2,
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        80,
+        368
+      ],
+      "id": "9356e72d-1b7e-497c-a939-72377388244a",
+      "name": "Process Each Prospect"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w",
+          "mode": "list",
+          "cachedResultName": "Prospect List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RJ7Hqrtx5MfvIbl0wzruzUVODuaeVOhCwGjAOEpx43w/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -128,
+        368
+      ],
+      "id": "291d9563-898d-4740-9a5f-e5dc012d20e1",
+      "name": "Get New Prospects",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "W2etVopVizVki4sh",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -336,
+        368
+      ],
+      "id": "ffba4d1f-e7c9-431c-8599-841b824e6a65",
+      "name": "Check for New Prospects"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Send Outreach Email": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Personalized Email": {
+      "main": [
+        [
+          {
+            "node": "Send Outreach Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status": {
+      "main": [
+        [
+          {
+            "node": "Wait 3 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 3 Days": {
+      "main": [
+        [
+          {
+            "node": "Check for Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Reply": {
+      "main": [
+        [
+          {
+            "node": "Has Prospect Replied?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Prospect Replied?": {
+      "main": [
+        [
+          {
+            "node": "Mark as Replied",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Follow-up": {
+      "main": [
+        [
+          {
+            "node": "Mark Follow-up Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each Prospect": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Write Personalized Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get New Prospects": {
+      "main": [
+        [
+          {
+            "node": "Process Each Prospect",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for New Prospects": {
+      "main": [
+        [
+          {
+            "node": "Get New Prospects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Follow-up Sent": {
+      "main": [
+        [
+          {
+            "node": "Process Each Prospect",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "471907ce-d10c-4392-9ae8-f2f3206d563c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "968f57f9f4a5c319088542da49fca716d14903c4952792a074a000bfd33a0359"
+  },
+  "nodeGroups": [],
+  "id": "2JQRkHcPaG9vyAnw",
+  "tags": []
+}
